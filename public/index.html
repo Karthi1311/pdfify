@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Converter</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
+</head>
+<body>
+    <div class="main-wrapper">
+        <div class="container">
+            <h1>PDF Converter</h1>
+            <p>Select images or PDFs to merge into a single PDF.</p>
+            
+            <form id="uploadForm">
+                <div class="file-input-container">
+                    <input type="file" id="fileInput" name="files" multiple accept=".pdf, .jpg, .jpeg, .png">
+                    <label for="fileInput" class="file-label">Choose Files</label>
+                </div>
+                
+                <div class="input-group">
+                    <input type="text" id="fileName" class="filename-input" placeholder="File name (optional)">
+                </div>
+
+                <button type="submit" id="convertBtn" disabled>Convert to PDF</button>
+            </form>
+            
+            <div id="status"></div>
+        </div>
+
+        <div class="preview-container">
+            <h2>Preview & Reorder</h2>
+            <p>Drag and drop items to change the order.</p>
+            <div id="previewList" class="preview-list">
+                <!-- Preview items will be added here -->
+                <div class="empty-state">No files selected</div>
+            </div>
+        </div>
+    </div>
+    <script src="client.js"></script>
+</body>
+</html>

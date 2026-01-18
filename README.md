@@ -24,7 +24,3 @@ A lightweight Node.js + Express microservice for converting uploaded files to PD
 ## Contributing
 
 Contributions welcome — open issues or PRs.
-
-## License
-
-MIT

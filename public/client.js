@@ -4,8 +4,14 @@ const convertBtn = document.getElementById('convertBtn');
 const uploadForm = document.getElementById('uploadForm');
 const statusDiv = document.getElementById('status');
 const fileNameInput = document.getElementById('fileName');
+const fileCount = document.getElementById('fileCount');
+const clearBtn = document.getElementById('clearBtn');
 
 let selectedFiles = [];
+
+function fileCountLabel(count) {
+    return `${count} file${count !== 1 ? 's' : ''}`;
+}
 
 fileInput.addEventListener('change', (e) => {
     const files = Array.from(e.target.files);
@@ -13,18 +19,41 @@ fileInput.addEventListener('change', (e) => {
         // Append new files to existing ones
         selectedFiles = [...selectedFiles, ...files];
         renderPreviews();
-        convertBtn.disabled = false;
+        announceStatus(`${fileCountLabel(selectedFiles.length)} ready`);
     }
     // Reset input so same files can be selected again if needed
     fileInput.value = '';
 });
 
+clearBtn.addEventListener('click', () => {
+    selectedFiles = [];
+    renderPreviews();
+    fileNameInput.value = '';
+    announceStatus('Selection cleared.');
+});
+
+function updateMeta() {
+    const count = selectedFiles.length;
+    fileCount.textContent = `${fileCountLabel(count)} selected`;
+    const hasFiles = count > 0;
+    convertBtn.disabled = !hasFiles;
+    clearBtn.disabled = !hasFiles;
+}
+
+function announceStatus(message) {
+    statusDiv.textContent = '';
+    // Resetting then setting the text on the next frame helps aria-live announce repeated messages.
+    requestAnimationFrame(() => {
+        statusDiv.textContent = message;
+    });
+}
+
 function renderPreviews() {
     previewList.innerHTML = '';
+    updateMeta();
     
     if (selectedFiles.length === 0) {
         previewList.innerHTML = '<div class="empty-state">No files selected</div>';
-        convertBtn.disabled = true;
         return;
     }
 
@@ -177,6 +206,10 @@ uploadForm.addEventListener('submit', async (e) => {
         console.error(error);
         statusDiv.textContent = 'An error occurred.';
     } finally {
-        convertBtn.disabled = false;
+        if (selectedFiles.length > 0) {
+            convertBtn.disabled = false;
+        }
     }
 });
+
+updateMeta();

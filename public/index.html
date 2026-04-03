@@ -7,7 +7,9 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script>
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        if (window.pdfjsLib) {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        }
     </script>
 </head>
 <body>
@@ -26,10 +28,15 @@
                     <input type="text" id="fileName" class="filename-input" placeholder="File name (optional)">
                 </div>
 
+                <div class="meta-row">
+                    <span id="fileCount" class="pill">0 files selected</span>
+                    <button type="button" id="clearBtn" class="ghost-btn" disabled>Clear all</button>
+                </div>
+
                 <button type="submit" id="convertBtn" disabled>Convert to PDF</button>
             </form>
             
-            <div id="status"></div>
+            <div id="status" role="status" aria-live="polite"></div>
         </div>
 
         <div class="preview-container">

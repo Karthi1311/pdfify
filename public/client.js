@@ -9,13 +9,17 @@ const clearBtn = document.getElementById('clearBtn');
 
 let selectedFiles = [];
 
+function fileCountLabel(count) {
+    return `${count} file${count !== 1 ? 's' : ''}`;
+}
+
 fileInput.addEventListener('change', (e) => {
     const files = Array.from(e.target.files);
     if (files.length > 0) {
         // Append new files to existing ones
         selectedFiles = [...selectedFiles, ...files];
         renderPreviews();
-        statusDiv.textContent = `${selectedFiles.length} file${selectedFiles.length > 1 ? 's' : ''} ready`;
+        announceStatus(`${fileCountLabel(selectedFiles.length)} ready`);
     }
     // Reset input so same files can be selected again if needed
     fileInput.value = '';
@@ -25,15 +29,23 @@ clearBtn.addEventListener('click', () => {
     selectedFiles = [];
     renderPreviews();
     fileNameInput.value = '';
-    statusDiv.textContent = 'Selection cleared.';
+    announceStatus('Selection cleared.');
 });
 
 function updateMeta() {
     const count = selectedFiles.length;
-    fileCount.textContent = `${count} file${count === 1 ? '' : 's'} selected`;
+    fileCount.textContent = `${fileCountLabel(count)} selected`;
     const hasFiles = count > 0;
     convertBtn.disabled = !hasFiles;
     clearBtn.disabled = !hasFiles;
+}
+
+function announceStatus(message) {
+    statusDiv.textContent = '';
+    // Resetting then setting the text on the next frame helps aria-live announce repeated messages.
+    requestAnimationFrame(() => {
+        statusDiv.textContent = message;
+    });
 }
 
 function renderPreviews() {
